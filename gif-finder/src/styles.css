@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~ng-zorro-antd/ng-zorro-antd.min.css";
+/*@import "~ng-zorro-antd/ng-zorro-antd.dark.css";*/
+/*@import "~ng-zorro-antd/ng-zorro-antd.compact.css";*/
+/*@import "~ng-zorro-antd/ng-zorro-antd.aliyun.css";*/
+@import "~ng-zorro-antd/style/index.min.css"; /* Import base styles */
+@import "~ng-zorro-antd/button/style/index.min.css";  /* Import one component's styles */
