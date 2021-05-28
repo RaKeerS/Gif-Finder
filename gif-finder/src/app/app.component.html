@@ -1,4 +1,4 @@
-<nz-layout [style.height]="'100%'">
+<nz-layout [style.height]="'100%'" [style.overflow]="'hidden'">
   <nz-header>
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
@@ -8,13 +8,23 @@
     </ul>
   </nz-header>
   <nz-layout>
-    <nz-sider nzWidth="200px" nzTheme="light">
+    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light">
       <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
-        <li nz-submenu nzOpen nzIcon="user" nzTitle="subnav 1">        
+        <li nz-menu-item>
+          <i nz-icon nzType="user"></i>
+          <span>User</span>
         </li>
-        <li nz-submenu nzTitle="subnav 2" nzIcon="laptop">
+        <li nz-menu-item>
+          <i nz-icon nzType="laptop"></i>
+          <span>Laptop</span>
         </li>
-        <li nz-submenu nzTitle="subnav 3" nzIcon="notification">
+        <li nz-menu-item>
+          <i nz-icon nzType="notification"></i>
+          <span>Notification</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="file"></i>
+          <span>File</span>
         </li>
       </ul>
     </nz-sider>
@@ -25,10 +35,9 @@
         <nz-breadcrumb-item>App</nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-content>
-        Content
         <router-outlet></router-outlet>
-        <button nz-button nzType="primary">Primary</button>
-        <a [routerLink]="['/home']">Click Me</a>
+        <!-- <button nz-button nzType="primary">Primary</button>
+        <a [routerLink]="['/home']">Click Me</a> -->
       </nz-content>
     </nz-layout>
   </nz-layout>

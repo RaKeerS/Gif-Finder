@@ -1,5 +1,12 @@
+<div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" [ngStyle]="{ 'overflow': 'auto', 'height': '100%', 'width': '100%' }">
+    <div nz-col nzSpan="24" class="gutter-row">
+        <nz-space nzDirection="vertical" [style.width]="'100%'">
+            <nz-card *nzSpaceItem nzTitle="Card" style="width: auto">
+              <p>Card content</p>
+              <p>Card content</p>
+            </nz-card>
+        </nz-space>
+    </div>
 
-
-<p>home-page works!</p>
-
-<h1>Hello</h1>
+    <nz-divider nzOrientation="left" nzText="Results"></nz-divider>
+</div>

@@ -23,6 +23,16 @@
     margin: 16px 0;
   }
 
+  ::ng-deep .ant-layout-sider-light .ant-layout-sider-trigger
+  {
+    background: #262626;
+  }
+
+  .ant-layout-sider-light
+  {
+    background: #262626;
+  }
+
   /* .ant-breadcrumb {
     padding: 0;
     font-variant: tabular-nums;
