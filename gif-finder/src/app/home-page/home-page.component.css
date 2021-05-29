@@ -1,0 +1,62 @@
+
+* {
+    box-sizing: border-box;
+}
+  
+
+::ng-deep .ant-space-item {
+    /* padding-bottom: 24px; */
+    height: 95%;
+}
+
+::ng-deep .ant-card-body {
+    overflow: auto;
+    height: 56%;
+    padding: 10px;
+}
+
+#customRow {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+/* Fake image, just for this example */
+.fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+}
+  
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+
+/* Create four equal columns that sits next to each other */
+.column {
+    flex: 30%;
+    max-width: 34%;
+    padding: 0 4px;
+}
+
+.column div {
+    margin-top: 8px;
+    vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media (max-width: 800px) {
+    .column {
+        flex: 50%;
+        max-width: 50%;
+    }
+}
+  
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    .column {
+      flex: 100%;
+      max-width: 100%;
+    }
+}

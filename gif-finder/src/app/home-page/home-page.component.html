@@ -1,12 +1,61 @@
-<div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" [ngStyle]="{ 'overflow': 'auto', 'height': '100%', 'width': '100%' }">
-    <div nz-col nzSpan="24" class="gutter-row">
-        <nz-space nzDirection="vertical" [style.width]="'100%'">
-            <nz-card *nzSpaceItem nzTitle="Card" style="width: auto">
+<div nz-row id="customRow" [nzGutter]="{ xs: 4, sm: 12, md: 20, lg: 28 }" [ngStyle]="{ 'height': '100%', 'width': '100%' }">
+    <div nz-col nzSpan="24" class="gutter-row" [style.height]="'100%'">
+        <nz-space nzDirection="vertical" [style.width]="'100%'" [style.height]="'100%'">
+            <!-- <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;"> -->
+            <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;">
+                <!-- <div>
+                    <p>AA</p>
+                </div>
               <p>Card content</p>
-              <p>Card content</p>
+              <p>Card content</p> -->
+              <div class="mainBody">
+                <ng-container *ngTemplateOutlet="imageTemplate1"></ng-container>
+              </div>
             </nz-card>
         </nz-space>
     </div>
 
-    <nz-divider nzOrientation="left" nzText="Results"></nz-divider>
+    <!-- <nz-divider nzOrientation="left" nzText="Results"></nz-divider> -->
 </div>
+
+<ng-template #testTemplate>
+    <div><p>Testing...</p></div>
+</ng-template>
+
+<ng-template #header>
+    <div [style.text-align]="'center'">
+        <h1 [style.color]="'white'"><label>Gif Finder</label></h1>
+        <p><label>Search for any and all types of Gifs you need!</label></p>
+        <p>
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+                <input type="text" nz-input placeholder="input search text" />
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button nz-button nzType="primary" nzSize="large" nzSearch>Search</button>
+            </ng-template>
+        </p>
+    </div>
+</ng-template>
+
+<ng-template #imageTemplate1>
+    <div class="row">
+        <div class="column">
+            <div class="fakeimg" style="height: 200px">Image</div>
+            <div class="fakeimg" style="height: 500px">Image</div>
+            <div class="fakeimg" style="height: 100px">Image</div>
+            <div class="fakeimg" style="height: 330px">Image</div>
+        </div>
+        <div class="column">
+            <div class="fakeimg" style="height: 100px">Image</div>
+            <div class="fakeimg" style="height: 330px">Image</div>
+            <div class="fakeimg" style="height: 200px">Image</div>
+            <div class="fakeimg" style="height: 500px">Image</div>
+        </div>
+        <div class="column">
+            <div class="fakeimg" style="height: 100px">Image</div>
+            <div class="fakeimg" style="height: 500px">Image</div>
+            <div class="fakeimg" style="height: 330px">Image</div>
+            <div class="fakeimg" style="height: 200px">Image</div>
+        </div>
+    </div>
+</ng-template>
