@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~11.2.14",
     "@angular/router": "~11.2.14",
     "ng-zorro-antd": "^11.4.1",
+    "ngx-liquid-cache": "^1.3.2",
     "postcss": "^8.2.10",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

@@ -1,6 +1,6 @@
 <div nz-row id="customRow" [nzGutter]="{ xs: 4, sm: 12, md: 20, lg: 28 }" [ngStyle]="{ 'height': '100%', 'width': '100%' }">
     <div nz-col nzSpan="24" class="gutter-row" [style.height]="'100%'">
-        <nz-space nzDirection="vertical" [style.width]="'100%'" [style.height]="'100%'">
+        <nz-space nzDirection="vertical" [style.width]="'100%'" [style.height]="'100%'" [style.display]="'flex'" [style.flex-flow]="'column-reverse wrap'" >
             <!-- <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;"> -->
             <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;">
                 <!-- <div>
@@ -12,6 +12,9 @@
                 <ng-container *ngTemplateOutlet="imageTemplate1"></ng-container>
               </div>
             </nz-card>
+            <div class="row" [style.justify-content]="'center'">
+                <nz-pagination [nzPageIndex]="1" [nzTotal]="50" (nzPageIndexChange)="pageChange($event)" style="margin-top: 5px; margin-bottom: -5px;"></nz-pagination>
+            </div>
         </nz-space>
     </div>
 
@@ -28,10 +31,10 @@
         <p><label>Search for any and all types of Gifs you need!</label></p>
         <p>
             <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                <input type="text" nz-input placeholder="input search text" />
+                <input type="text" nz-input [(ngModel)]="searchKeyword" placeholder="input search text" />
             </nz-input-group>
             <ng-template #suffixButton>
-                <button nz-button nzType="primary" nzSize="large" nzSearch>Search</button>
+                <button nz-button (click)="findGif($event)" nzType="primary" nzSize="large" nzSearch>Search</button>
             </ng-template>
         </p>
     </div>
@@ -39,7 +42,26 @@
 
 <ng-template #imageTemplate1>
     <div class="row">
-        <div class="column">
+        <!-- <ng-container *ngFor="let item of gifData; let ind=index;">
+            <img id="ind" [src]="item.url">
+            <label>{{item.title}}</label>
+        </ng-container> -->
+        <ng-container *ngFor="let item of gifData; let ind=index;">
+            <div class="dflex1">
+                <picture class="dflex2">
+                    <source type="image/webp"
+                        [srcset]="item.images.fixed_width.webp">
+                    <img class="giphy-gif-img giphy-img-loaded"
+                        [src]="item.images.fixed_width.url"
+                        style="background: rgb(0, 255, 153) none repeat scroll 0% 0%; width: 100%; height: 85%;" [alt]="item.title" 
+                        >
+                        <!-- width="248"
+                        height="140"> -->
+                    <label [style.text-align]="'center'" [style.width]="'100%'">{{item.title}}</label>
+                </picture>
+            </div>
+        </ng-container>
+        <!-- <div class="column">
             <div class="fakeimg" style="height: 200px">Image</div>
             <div class="fakeimg" style="height: 500px">Image</div>
             <div class="fakeimg" style="height: 100px">Image</div>
@@ -56,6 +78,6 @@
             <div class="fakeimg" style="height: 500px">Image</div>
             <div class="fakeimg" style="height: 330px">Image</div>
             <div class="fakeimg" style="height: 200px">Image</div>
-        </div>
+        </div> -->
     </div>
 </ng-template>
