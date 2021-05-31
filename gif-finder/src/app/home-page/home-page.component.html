@@ -13,7 +13,7 @@
               </div>
             </nz-card>
             <div class="row" [style.justify-content]="'center'">
-                <nz-pagination [nzPageIndex]="1" [nzTotal]="50" (nzPageIndexChange)="pageChange($event)" style="margin-top: 5px; margin-bottom: -5px;"></nz-pagination>
+                <nz-pagination [nzPageIndex]="1" [nzTotal]="totalCount" (nzPageIndexChange)="pageChange($event)" style="margin-top: 5px; margin-bottom: -5px;"></nz-pagination>
             </div>
         </nz-space>
     </div>
@@ -34,7 +34,7 @@
                 <input type="text" nz-input [(ngModel)]="searchKeyword" placeholder="input search text" />
             </nz-input-group>
             <ng-template #suffixButton>
-                <button nz-button (click)="findGif($event)" nzType="primary" nzSize="large" nzSearch>Search</button>
+                <button nz-button (click)="getSearchedGifs(1)" nzType="primary" nzSize="large" nzSearch>Search</button>
             </ng-template>
         </p>
     </div>
