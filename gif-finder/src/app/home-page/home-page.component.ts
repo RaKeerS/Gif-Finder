@@ -28,6 +28,8 @@ export class HomePageComponent implements OnInit {
   readonly specificConf: LiquidCacheConfig = { duration: 60 };
 
   public totalCount: number = 50;
+  
+  public initial: number = 1;
 
   constructor(private cache: LiquidCacheService) {
 
@@ -77,6 +79,10 @@ export class HomePageComponent implements OnInit {
     }
   }
 
+  // public getGifs(event: any) {
+  //   this.getSearchedGifs(event);
+  // }
+
   // Assuming to invoke getSingleUser(1), the result 
   // will be stored in the cache system with key 'user1'
   // @LiquidCache('gifData{event}')
@@ -85,7 +91,7 @@ export class HomePageComponent implements OnInit {
 
     switch(this.contentType) {
       case ContentType.TREND: this.getTrendingGifs(event); break;
-      case ContentType.SEARCH: this.getSearchedGifs(event); break;
+      case ContentType.SEARCH: this.getSearchedGifs(null, event); break;
       case ContentType.POPULAR: this.getPopularGifs(event); break;
     }
     
@@ -120,7 +126,8 @@ export class HomePageComponent implements OnInit {
     this.contentType = ContentType.TREND;
   }
 
-  public async getSearchedGifs(page: number) {
+  public async getSearchedGifs(event: any, page: number) {
+    if (event != null) { this.totalCount = 0; } // Without this, the pagination index isn't changing on UI from any value greater than default value, back to the default value again on this.gifData value change.
     if (this.contentType == ContentType.SEARCH && this.tempSearchKeyword.trim().length > 0 && this.tempSearchKeyword.trim().toLowerCase() != this.searchKeyword.trim().toLowerCase() && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
@@ -133,7 +140,7 @@ export class HomePageComponent implements OnInit {
         let tempData = await (await this.gf.search(this.searchKeyword, { limit: 24, offset: (((page - 1) * 24) + 1), sort: 'relevant', type: 'stickers' })).data;
         tempData.length > 0 ? this.gifData = tempData : null;
         console.log('Response: ', tempData);
-        console.log('Seached Gifs: ', this.gifData);
+        console.log('Searched Gifs: ', this.gifData);
         this.commonOperation(tempData, page);
       } catch (error) {
         console.log('Error occurred: ' + error);
@@ -175,6 +182,7 @@ export class HomePageComponent implements OnInit {
       this.totalCount = 10 * page
     }
     else {
+      this.totalCount = 50;
       this.cache.set('gifData' + page, gifData, this.specificConf);
     }
   }
