@@ -8,23 +8,63 @@
     </ul>
   </nz-header> -->
   <nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light">
+    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light" (nzCollapsedChange)="onCollapsedChange($event)">
       <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
         <li nz-menu-item>
           <i nz-icon nzType="user"></i>
-          <span>User</span>
+          <span>GIPHY Studios</span>
         </li>
         <li nz-menu-item>
           <i nz-icon nzType="laptop"></i>
-          <span>Laptop</span>
+          <span>Animals</span>
         </li>
         <li nz-menu-item>
           <i nz-icon nzType="notification"></i>
-          <span>Notification</span>
+          <span>Actions</span>
         </li>
         <li nz-menu-item>
           <i nz-icon nzType="file"></i>
-          <span>File</span>
+          <span>Anime</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="user"></i>
+          <span>Cartoons</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="laptop"></i>
+          <span>Emotions</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="notification"></i>
+          <span>Food/Drink</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="file"></i>
+          <span>Gaming</span>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="user"></i>
+          <span>Holidays/Greetings</span>
+        </li>
+        <li nz-submenu nzTitle="Memes" nzIcon="notification">
+          <ul>
+            <li nz-menu-item>
+              <i nz-icon nzType="laptop"></i>
+              <span>Arthur</span>
+            </li>
+            <li nz-menu-item>
+              <i nz-icon nzType="laptop"></i>
+              <span>Confused</span>
+            </li>
+            <li nz-menu-item>
+              <i nz-icon nzType="laptop"></i>
+              <span>Crying Dawson</span>
+            </li>
+          </ul>
+        </li>
+        <li nz-menu-item>
+          <i nz-icon nzType="notification"></i>
+          <span>Clips</span>
         </li>
       </ul>
     </nz-sider>
@@ -35,7 +75,8 @@
         <nz-breadcrumb-item>App</nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-content>
-        <router-outlet></router-outlet>
+        <!-- <router-outlet (activate)="getCategoriesList($event)"></router-outlet> -->
+        <app-home-page (categoriesList)="getCategoriesList($event)"></app-home-page>
         <!-- <button nz-button nzType="primary">Primary</button>
         <a [routerLink]="['/home']">Click Me</a> -->
       </nz-content>

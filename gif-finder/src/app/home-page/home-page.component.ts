@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { GiphyFetch } from '@giphy/js-fetch-api'
 
 import { LiquidCache, LiquidCacheConfig, LiquidCacheService } from 'ngx-liquid-cache';
 
+import { SamplerServiceService } from '../Service/sampler-service.service';
+
 import { ContentType } from '../content-type-enum';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -14,6 +17,8 @@ import { ContentType } from '../content-type-enum';
 export class HomePageComponent implements OnInit {
 
   // API Key: q0CwrgPwQZWJmqjr9rDhKNYFVYDpojyh
+
+  @Output() categoriesList = new EventEmitter<string[]>();
 
   public searchKeyword: string = "";
   
@@ -31,13 +36,58 @@ export class HomePageComponent implements OnInit {
   
   public initial: number = 1;
 
-  constructor(private cache: LiquidCacheService) {
+  constructor(private cache: LiquidCacheService, private sampler: SamplerServiceService) {
 
   }
 
   ngOnInit(): void {
     // this.initialLoading();
     this.getTrendingGifs(1);
+    this.init();
+  }
+
+  public async init(): Promise<void> {
+    const { data: categories } = await this.gf.categories();
+    console.log('CategoriesList', categories);
+    let categoriesList: string[] = [];
+    categories.forEach((category: any) => {
+      console.log(category) // ICategory
+      categoriesList.push(category.name);
+    });
+
+    this.sampler.categories$ = new Observable<any>((observer) => {
+      observer.next(categoriesList);
+
+      return {
+        unsubscribe: () => {
+  
+        },
+        getSubCategories : () => {
+  
+        }
+      }
+    });
+
+    this.sampler.categories$?.subscribe((response) => {
+      let categories = response;
+    }, (error) => {
+  
+    })
+
+    this.sampler.emitData(categoriesList);
+
+    this.sampler.categorySubject1.next(categoriesList);
+
+    this.categoriesList.emit(categoriesList);
+
+
+    // await this.gf.subcategories('tv', { limit: 10, offset: 25, })
+
+    // const { data: categories1 } = await this.gf.categories();
+    // console.log('Categories', categories);
+    // categories1.forEach((category: any) => {
+    //     console.log(category) // ICategory
+    // })
   }
 
   // @LiquidCache('gifData1')

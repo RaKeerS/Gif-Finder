@@ -24,6 +24,8 @@ import * as AllIcons from '@ant-design/icons-angular/icons';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+import { SamplerServiceService } from './Service/sampler-service.service';
+
 
 registerLocaleData(en);
 
@@ -54,7 +56,7 @@ const liquidCacheConfig: LiquidCacheConfig = {
     HttpClientModule,
     NgxLiquidCacheModule.forRoot(liquidCacheConfig),
   ],
-  providers: [ { provide: NZ_I18N, useValue: en_US }, { provide: NZ_ICONS, useValue: icons } ],
+  providers: [SamplerServiceService, { provide: NZ_I18N, useValue: en_US }, { provide: NZ_ICONS, useValue: icons } ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
