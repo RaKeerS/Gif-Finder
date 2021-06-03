@@ -8,9 +8,18 @@
     </ul>
   </nz-header> -->
   <nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light" (nzCollapsedChange)="onCollapsedChange($event)">
+    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light">
+      <div class="logo">
+        <h2>Categories</h2>
+      </div>
       <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
-        <li nz-menu-item>
+        <ng-container *ngFor="let item of categories">
+          <li nz-menu-item (click)="getSubcategoryData(item.key)">
+            <i nz-icon [nzType]="item.value"></i>
+            <span>{{item.key | titlecase}}</span>
+          </li>
+        </ng-container>
+        <!-- <li nz-menu-item>
           <i nz-icon nzType="user"></i>
           <span>GIPHY Studios</span>
         </li>
@@ -65,7 +74,7 @@
         <li nz-menu-item>
           <i nz-icon nzType="notification"></i>
           <span>Clips</span>
-        </li>
+        </li> -->
       </ul>
     </nz-sider>
     <nz-layout class="inner-layout">
@@ -75,8 +84,7 @@
         <nz-breadcrumb-item>App</nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-content>
-        <!-- <router-outlet (activate)="getCategoriesList($event)"></router-outlet> -->
-        <app-home-page (categoriesList)="getCategoriesList($event)"></app-home-page>
+        <router-outlet></router-outlet>
         <!-- <button nz-button nzType="primary">Primary</button>
         <a [routerLink]="['/home']">Click Me</a> -->
       </nz-content>

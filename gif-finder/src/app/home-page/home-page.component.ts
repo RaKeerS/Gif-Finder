@@ -8,6 +8,7 @@ import { SamplerServiceService } from '../Service/sampler-service.service';
 
 import { ContentType } from '../content-type-enum';
 import { Observable } from 'rxjs';
+import { IGif } from '@giphy/js-types';
 
 @Component({
   selector: 'app-home-page',
@@ -36,12 +37,21 @@ export class HomePageComponent implements OnInit {
   
   public initial: number = 1;
 
-  constructor(private cache: LiquidCacheService, private sampler: SamplerServiceService) {
+  private currentCategory: string = ''; 
 
+  constructor(private cache: LiquidCacheService, private sampler: SamplerServiceService) {
+    this.sampler.subcategorySubject.subscribe((response) => {
+      this.currentCategory = response;
+      this.getSubcategoriesGifs(response, 1);
+      console.log('Response from Home Component: ', response);
+    }, (error) => {
+      console.log('Error from Home Component: ', error);
+    })
   }
 
   ngOnInit(): void {
     // this.initialLoading();
+
     this.getTrendingGifs(1);
     this.init();
   }
@@ -55,39 +65,10 @@ export class HomePageComponent implements OnInit {
       categoriesList.push(category.name);
     });
 
-    this.sampler.categories$ = new Observable<any>((observer) => {
-      observer.next(categoriesList);
+    let crossBindData = { categories: categoriesList, subcategoriesFn: async (category: string) => { await this.gf.subcategories(category, { limit: 10, offset: 24, }) } }
 
-      return {
-        unsubscribe: () => {
-  
-        },
-        getSubCategories : () => {
-  
-        }
-      }
-    });
+    this.sampler.categorySubject.next(crossBindData);
 
-    this.sampler.categories$?.subscribe((response) => {
-      let categories = response;
-    }, (error) => {
-  
-    })
-
-    this.sampler.emitData(categoriesList);
-
-    this.sampler.categorySubject1.next(categoriesList);
-
-    this.categoriesList.emit(categoriesList);
-
-
-    // await this.gf.subcategories('tv', { limit: 10, offset: 25, })
-
-    // const { data: categories1 } = await this.gf.categories();
-    // console.log('Categories', categories);
-    // categories1.forEach((category: any) => {
-    //     console.log(category) // ICategory
-    // })
   }
 
   // @LiquidCache('gifData1')
@@ -142,12 +123,9 @@ export class HomePageComponent implements OnInit {
     switch(this.contentType) {
       case ContentType.TREND: this.getTrendingGifs(event); break;
       case ContentType.SEARCH: this.getSearchedGifs(null, event); break;
-      case ContentType.POPULAR: this.getPopularGifs(event); break;
+      case ContentType.SUBCATEGORY: this.getSubcategoriesGifs(this.currentCategory, event); break;
     }
     
-
-    
-
     //javascript, jQuery
 
     // var xhr = $.get(`http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=${this.gf}&limit=24`);
@@ -200,8 +178,8 @@ export class HomePageComponent implements OnInit {
     this.contentType = ContentType.SEARCH;
   }
 
-  public async getPopularGifs(page: number) {
-    if (this.contentType == ContentType.POPULAR && this.cache.get('gifData' + page))
+  public async getSubcategoriesGifs(category: string, page: number) {
+    if (this.contentType == ContentType.SUBCATEGORY && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
       console.log('Cached Value:', cacheData);
@@ -209,16 +187,19 @@ export class HomePageComponent implements OnInit {
     } 
     else {
       try {
-        let tempData = await (await this.gf.trending({ limit: 24, offset: (((page - 1) * 24) + 1) })).data;
+        let tempDataCollector = await (await this.gf.subcategories(category.replace(/ +/g, "").trim(), { limit: 24, offset: (((page - 1) * 24) + 1) })).data;
+        let tempData: (IGif | undefined)[] = [];
+        tempDataCollector.forEach((value, index) => {
+          tempData.push(value.gif);
+        })
         tempData.length > 0 ? this.gifData = tempData : null;
-        console.log('Response: ', tempData);
-        console.log('Popular Gifs: ', this.gifData);
+        console.log('Subcategory Gifs: ', this.gifData);
         this.commonOperation(tempData, page);
       } catch (error) {
         console.log('Error occurred: ' + error);
       }
     }
-    this.contentType = ContentType.POPULAR;
+    this.contentType = ContentType.SUBCATEGORY;
   }
 
   private commonOperation(gifData: any, page: number) {

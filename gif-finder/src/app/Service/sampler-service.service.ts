@@ -6,23 +6,11 @@ import { Observable, Subject } from 'rxjs';
 })
 export class SamplerServiceService {
 
-  public abs: string = 'Hello';
+  public categorySubject = new Subject<any>();
 
-  public callbackFuntion: any;
-
-  // public categories$: Observable<any> | undefined = new Observable();
-
-  private categorySubject = new Subject<any>();
-  public categorySubject1 = new Subject<any>();
-
-  public categories$ = this.categorySubject.asObservable();
+  public subcategorySubject = new Subject<any>();
 
   constructor() { 
     
-  }
-
-  public emitData(data: any)
-  {
-    this.categorySubject.next(data);
   }
 }
