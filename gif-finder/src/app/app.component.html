@@ -8,11 +8,15 @@
     </ul>
   </nz-header> -->
   <nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light">
-      <div class="logo">
+    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light" (nzCollapsedChange)="onCollapsedChange($event)">
+      <!-- <div class="logo">
         <h2>Categories</h2>
-      </div>
+      </div> -->
       <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
+        <li nz-menu-item class="mainMenuItem">
+          <i nz-icon nzType="appstore" [style.font-size]="'large'"></i>
+          <span [style.font-size]="'20px'">Categories</span>
+        </li>
         <ng-container *ngFor="let item of categories">
           <li nz-menu-item (click)="getSubcategoryData(item.key)">
             <i nz-icon [nzType]="item.value"></i>
@@ -77,13 +81,17 @@
         </li> -->
       </ul>
     </nz-sider>
-    <nz-layout class="inner-layout">
-      <nz-breadcrumb>
+    <nz-layout #innerLayout class="inner-layout" [style.margin-left]="'200px'" [style.padding]="'5px'">
+      <div class="dflex" *ngIf="categories.length > 0">
+        <label [style.color]="'white'">Category being shown: </label> &nbsp;
+        <nz-tag nzColor="default">{{selectedCategory | titlecase}}</nz-tag>
+      </div>
+      <!-- <nz-breadcrumb>
         <nz-breadcrumb-item>Home</nz-breadcrumb-item>
         <nz-breadcrumb-item>List</nz-breadcrumb-item>
         <nz-breadcrumb-item>App</nz-breadcrumb-item>
-      </nz-breadcrumb>
-      <nz-content>
+      </nz-breadcrumb> -->
+      <nz-content [style.background-color]="'#ffffff00 !important'">
         <router-outlet></router-outlet>
         <!-- <button nz-button nzType="primary">Primary</button>
         <a [routerLink]="['/home']">Click Me</a> -->

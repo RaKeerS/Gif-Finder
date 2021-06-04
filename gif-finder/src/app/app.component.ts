@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 
 import { SamplerServiceService } from './Service/sampler-service.service';
 
@@ -9,6 +9,8 @@ import { SamplerServiceService } from './Service/sampler-service.service';
 })
 export class AppComponent {
   title = 'gif-finder';
+
+  @ViewChild('innerLayout') innerLayout!: any;
 
   // public categories: string[] = [
   //   'actions',
@@ -162,6 +164,8 @@ export class AppComponent {
 
   public getSubcategories: any;
 
+  public selectedCategory: string = 'Trending';
+
 
 constructor(private sampler: SamplerServiceService) {
 
@@ -179,6 +183,7 @@ ngOnInit() {
 }
 
 public getSubcategoryData(item: string) {
+  this.selectedCategory = item;
   this.sampler.subcategorySubject.next(item);
 }
 
@@ -215,6 +220,11 @@ private associateIcons(tempCategories: string[]) {
       case 'weird': this.categories.push({ key: value, value: 'meh' }); break;
     }
   });
+}
+
+public onCollapsedChange(event: boolean) {
+  event ? this.innerLayout.elementRef.nativeElement.style.marginLeft = "82px" : 
+  this.innerLayout.elementRef.nativeElement.style.marginLeft = "200px";
 }
 
 }

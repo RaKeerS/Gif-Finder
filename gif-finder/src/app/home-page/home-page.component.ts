@@ -2,13 +2,16 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { GiphyFetch } from '@giphy/js-fetch-api'
 
-import { LiquidCache, LiquidCacheConfig, LiquidCacheService } from 'ngx-liquid-cache';
+import { LiquidCacheConfig, LiquidCacheService } from 'ngx-liquid-cache';
 
 import { SamplerServiceService } from '../Service/sampler-service.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { ContentType } from '../content-type-enum';
-import { Observable } from 'rxjs';
+
 import { IGif } from '@giphy/js-types';
+
+import { concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home-page',
@@ -24,6 +27,8 @@ export class HomePageComponent implements OnInit {
   public searchKeyword: string = "";
   
   private tempSearchKeyword: string = "";
+
+  private tempCategory: string = '';
   
   public gifData: any;
 
@@ -39,7 +44,11 @@ export class HomePageComponent implements OnInit {
 
   private currentCategory: string = ''; 
 
-  constructor(private cache: LiquidCacheService, private sampler: SamplerServiceService) {
+  public isSpinning: boolean = false;
+
+  public isEmpty: boolean = false;
+
+  constructor(private cache: LiquidCacheService, private sampler: SamplerServiceService, private message: NzMessageService) {
     this.sampler.subcategorySubject.subscribe((response) => {
       this.currentCategory = response;
       this.getSubcategoriesGifs(response, 1);
@@ -52,22 +61,27 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     // this.initialLoading();
 
-    this.getTrendingGifs(1);
     this.init();
+    this.getTrendingGifs(1);
   }
 
   public async init(): Promise<void> {
-    const { data: categories } = await this.gf.categories();
-    console.log('CategoriesList', categories);
-    let categoriesList: string[] = [];
-    categories.forEach((category: any) => {
-      console.log(category) // ICategory
-      categoriesList.push(category.name);
-    });
+    try {
+      const { data: categories } = await this.gf.categories();
+      console.log('CategoriesList', categories);
+      let categoriesList: string[] = [];
+      categories.forEach((category: any) => {
+        console.log(category) // ICategory
+        categoriesList.push(category.name);
+      });
 
-    let crossBindData = { categories: categoriesList, subcategoriesFn: async (category: string) => { await this.gf.subcategories(category, { limit: 10, offset: 24, }) } }
+      let crossBindData = { categories: categoriesList, subcategoriesFn: async (category: string) => { await this.gf.subcategories(category, { limit: 10, offset: 24, }) } }
 
-    this.sampler.categorySubject.next(crossBindData);
+      this.sampler.categorySubject.next(crossBindData);
+    } catch (error) {
+      this.message.create('error', error);
+    }
+    
 
   }
 
@@ -134,6 +148,8 @@ export class HomePageComponent implements OnInit {
   }
 
   public async getTrendingGifs(page: number) {
+    this.isSpinning = true;
+    const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
     if (this.contentType == ContentType.TREND && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
@@ -149,12 +165,17 @@ export class HomePageComponent implements OnInit {
         this.commonOperation(tempData, page);
       } catch (error) {
         console.log('Error occurred: ' + error);
+        this.message.create('error', error);
       }
     }
     this.contentType = ContentType.TREND;
+    this.isSpinning = false;
+    this.message.remove(id);
   }
 
   public async getSearchedGifs(event: any, page: number) {
+    this.isSpinning = true;
+    const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
     if (event != null) { this.totalCount = 0; } // Without this, the pagination index isn't changing on UI from any value greater than default value, back to the default value again on this.gifData value change.
     if (this.contentType == ContentType.SEARCH && this.tempSearchKeyword.trim().length > 0 && this.tempSearchKeyword.trim().toLowerCase() != this.searchKeyword.trim().toLowerCase() && this.cache.get('gifData' + page))
     {
@@ -172,14 +193,18 @@ export class HomePageComponent implements OnInit {
         this.commonOperation(tempData, page);
       } catch (error) {
         console.log('Error occurred: ' + error);
-        console.log('Error occurred: ' + error);
+        this.message.create('error', error);
       }
     }    
     this.contentType = ContentType.SEARCH;
+    this.isSpinning = false;
+    this.message.remove(id);
   }
 
   public async getSubcategoriesGifs(category: string, page: number) {
-    if (this.contentType == ContentType.SUBCATEGORY && this.cache.get('gifData' + page))
+    this.isSpinning = true;
+    const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
+    if (this.contentType == ContentType.SUBCATEGORY && this.currentCategory == this.tempCategory && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
       console.log('Cached Value:', cacheData);
@@ -197,23 +222,31 @@ export class HomePageComponent implements OnInit {
         this.commonOperation(tempData, page);
       } catch (error) {
         console.log('Error occurred: ' + error);
+        this.message.create('error', error);
       }
     }
     this.contentType = ContentType.SUBCATEGORY;
+    this.isSpinning = false;
+    this.message.remove(id);
   }
 
   private commonOperation(gifData: any, page: number) {
     if (gifData.length == 0)
     {
-      this.totalCount = 10 * (page - 1);
+      page - 1 != 0 ? this.totalCount = 10 * (page - 1) : null;
+      this.isEmpty = true;
       console.log('Sorry, no results found!');
+      this.message.create('error', 'Sorry, no results found!');
     }
     else if(gifData.length < 24)
     {
-      this.totalCount = 10 * page
+      this.totalCount = 10 * page;
+      this.isEmpty = false;
+      this.cache.set('gifData' + page, gifData, this.specificConf);
     }
     else {
       this.totalCount = 50;
+      this.isEmpty = false;
       this.cache.set('gifData' + page, gifData, this.specificConf);
     }
   }
