@@ -1,1 +1,7 @@
-<p>page-not-found works!</p>
+<div class="row" [style.height]="'100%'" [style.width]="'100%'">
+    <nz-empty [style.height]="'100%'" [style.width]="'100%'" [nzNotFoundContent]="pageNotFound"></nz-empty>
+</div>
+
+<ng-template #pageNotFound>
+    <span>Page Not Found!</span>
+</ng-template>

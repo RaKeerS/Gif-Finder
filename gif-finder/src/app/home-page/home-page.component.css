@@ -2,9 +2,12 @@
 * {
     box-sizing: border-box;
 }
+
+.custom-font-style1 {
+    font-family: 'Poppins', sans-serif;
+}
   
 ::ng-deep .ant-space-item {
-    /* padding-bottom: 24px; */
     height: 95%;
 }
 
@@ -17,13 +20,6 @@
 #customRow {
     margin-left: 0px !important;
     margin-right: 0px !important;
-}
-
-/* Fake image, just for this example */
-.fakeimg {
-    background-color: #aaa;
-    width: 100%;
-    padding: 20px;
 }
   
 .row {
@@ -106,7 +102,7 @@
 }
 
 /* Responsive layout - makes a two column-layout instead of four columns */
-@media (max-width: 1000px) {
+@media (max-width: 1060px) {
     .dflexMain {
         flex: 33.33%;
         max-width: 33.33%;
@@ -114,7 +110,7 @@
 }
 
 /* Responsive layout - makes a two column-layout instead of four columns */
-@media (max-width: 1000px) {
+@media (max-width: 1060px) {
     .column, .dflex1 {
         flex: 50%;
         /* max-width: 50%; */

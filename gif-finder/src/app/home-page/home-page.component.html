@@ -1,40 +1,26 @@
 <div nz-row id="customRow" [nzGutter]="{ xs: 4, sm: 12, md: 20, lg: 28 }" [ngStyle]="{ 'height': '100%', 'width': '100%' }">
-    <!-- <div nz-col nzSpan="24" class="gutter-row" [style.height]="'100%'"> -->
-        <nz-space nzDirection="vertical" [style.width]="'100%'" [style.height]="'100%'" [style.display]="'flex'" [style.flex-flow]="'column-reverse wrap'" >
-            <!-- <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;"> -->
-            <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;">
-                <!-- <div>
-                    <p>AA</p>
-                </div>
-                <p>Card content</p>
-                <p>Card content</p> -->
-                <div class="mainBody" [style.height]="'100%'">
-                <ng-container *ngTemplateOutlet="imageTemplate1"></ng-container>
-                </div>
-            </nz-card>
-            <div class="row" [style.justify-content]="'center'">
-                <nz-pagination [nzPageIndex]="initial" [nzTotal]="totalCount" (nzPageIndexChange)="pageChange($event)" style="margin-top: 5px; margin-bottom: -5px;"></nz-pagination>
+    <nz-space nzDirection="vertical" [style.width]="'100%'" [style.height]="'100%'" [style.display]="'flex'" [style.flex-flow]="'column-reverse wrap'" >
+        <nz-card *nzSpaceItem [nzTitle]="header" style="width: auto; height: 100%;">
+            <div class="mainBody" [style.height]="'100%'">
+            <ng-container *ngTemplateOutlet="imageTemplate1"></ng-container>
             </div>
-        </nz-space>
-    <!-- </div> -->
-
-    <!-- <nz-divider nzOrientation="left" nzText="Results"></nz-divider> -->
+        </nz-card>
+        <div class="row" [style.justify-content]="'center'">
+            <nz-pagination [nzPageIndex]="initial" [nzTotal]="totalCount" (nzPageIndexChange)="pageChange($event)" style="margin-top: 5px; margin-bottom: -5px;"></nz-pagination>
+        </div>
+    </nz-space>
 </div>
-
-<ng-template #testTemplate>
-    <div><p>Testing...</p></div>
-</ng-template>
 
 <ng-template #header>
     <div [style.text-align]="'center'">
-        <h1 [style.color]="'white'"><label>Gif Finder</label></h1>
-        <p><label>Search for any and all types of Gifs you need!</label></p>
+        <h1 [style.color]="'white'"><label class="custom-font-style1">Gif Finder</label></h1>
+        <p><label class="custom-font-style1">Search for any and all types of Gifs you need!</label></p>
         <p>
-            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-                <input type="text" nz-input [(ngModel)]="searchKeyword" placeholder="Enter here..." />
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton" class="custom-font-style1">
+                <input type="text" nz-input [(ngModel)]="searchKeyword" (keyup.enter)="getSearchedGifs($event, 1)" placeholder="Enter here..." />
             </nz-input-group>
             <ng-template #suffixButton>
-                <button nz-button (click)="getSearchedGifs($event, 1)" nzType="primary" nzSize="large" nzSearch>Search</button>
+                <button nz-button class="custom-font-style1" (click)="getSearchedGifs($event, 1)" nzType="primary" nzSize="large" nzSearch>Search</button>
             </ng-template>
         </p>
     </div>
@@ -42,10 +28,6 @@
 
 <ng-template #imageTemplate1>    
     <div class="row" *ngIf="!isEmpty">
-        <!-- <ng-container *ngFor="let item of gifData; let ind=index;">
-            <img id="ind" [src]="item.url">
-            <label>{{item.title}}</label>
-        </ng-container> -->
         <ng-container *ngFor="let item of gifData; let ind=index;">
             <div class="dflexMain">
                 <div class="dflex1">
@@ -55,38 +37,17 @@
                                 [srcset]="item.images.fixed_width.webp">
                             <img class="giphy-gif-img giphy-img-loaded"
                                 [src]="item.images.fixed_width.url"
-                                style="background: rgb(193 193 193) none repeat scroll 0% 0%; width: 100%; height: 100%;" [alt]="item.title" 
-                                >
-                                <!-- width="248"
-                                height="140"> -->
-                            <label class="customLabel">{{item.title.trim().length ? item.title : 'Miscellaneous' }}</label>
+                                style="background: rgb(193 193 193) none repeat scroll 0% 0%; width: 100%; height: 100%; 
+                                box-shadow: 3px 3px 0px white, -3px -3px 0px white, -3px 3px 0px white, 3px -3px 0px white;" [alt]="item.title">
+                            <label class="customLabel custom-font-style1">{{item.title.trim().length ? item.title : 'Miscellaneous' }}</label>
                         </picture>
                     </nz-spin>
                 </div>
                 <nz-divider></nz-divider>
             </div>
         </ng-container>
-        <!-- <div class="column">
-            <div class="fakeimg" style="height: 200px">Image</div>
-            <div class="fakeimg" style="height: 500px">Image</div>
-            <div class="fakeimg" style="height: 100px">Image</div>
-            <div class="fakeimg" style="height: 330px">Image</div>
-        </div>
-        <div class="column">
-            <div class="fakeimg" style="height: 100px">Image</div>
-            <div class="fakeimg" style="height: 330px">Image</div>
-            <div class="fakeimg" style="height: 200px">Image</div>
-            <div class="fakeimg" style="height: 500px">Image</div>
-        </div>
-        <div class="column">
-            <div class="fakeimg" style="height: 100px">Image</div>
-            <div class="fakeimg" style="height: 500px">Image</div>
-            <div class="fakeimg" style="height: 330px">Image</div>
-            <div class="fakeimg" style="height: 200px">Image</div>
-        </div> -->
     </div>
     <div class="row" [style.height]="'100%'" [style.width]="'100%'" *ngIf="isEmpty">
         <nz-empty [style.height]="'100%'" [style.width]="'100%'"></nz-empty>
     </div>
-<!-- </nz-spin> -->
 </ng-template>

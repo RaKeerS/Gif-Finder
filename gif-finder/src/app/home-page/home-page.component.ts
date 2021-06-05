@@ -11,16 +11,12 @@ import { ContentType } from '../content-type-enum';
 
 import { IGif } from '@giphy/js-types';
 
-import { concatMap } from 'rxjs/operators';
-
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
-
-  // API Key: q0CwrgPwQZWJmqjr9rDhKNYFVYDpojyh
 
   @Output() categoriesList = new EventEmitter<string[]>();
 
@@ -59,8 +55,6 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.initialLoading();
-
     this.init();
     this.getTrendingGifs(1);
   }
@@ -81,56 +75,9 @@ export class HomePageComponent implements OnInit {
     } catch (error) {
       this.message.create('error', error);
     }
-    
-
   }
 
-  // @LiquidCache('gifData1')
-  public async initialLoading() {
-    if (this.cache.get('gifData' + 1))
-    {
-      let cacheData: object = this.cache.getCacheObject('gifData' + 1).value;
-      console.log('Cached Value:', cacheData);
-      this.gifData = cacheData;
-    } 
-    else {
-      try {
-        this.gifData = await (await this.gf.trending({ limit: 24 })).data;
-        console.log(this.gifData);
-        this.cache.set('gifData'+ 1, this.gifData, this.specificConf);
-      } catch (error) {
-        console.log('Error occurred: ' + error);
-      }
-    }
-  }
-
-  public async findGif(event: any) {
-    this.contentType = ContentType.SEARCH;
-    if (this.tempSearchKeyword.trim.length > 0 && this.tempSearchKeyword != this.searchKeyword && this.cache.get('gifData' + 1))
-    {
-      let cacheData: object = this.cache.getCacheObject('gifData' + 1).value;
-      console.log('Cached Value:', cacheData);
-      this.gifData = cacheData;
-    } 
-    else {
-      try {
-        this.tempSearchKeyword = this.searchKeyword;
-        this.gifData = await (await this.gf.search(this.searchKeyword, { limit: 24, sort: 'relevant', type: 'stickers' })).data;
-        console.log(this.gifData);
-        this.cache.set('gifData', this.gifData, this.specificConf);
-      } catch (error) {
-        console.log('Error occurred: ' + error);
-      }
-    }
-  }
-
-  // public getGifs(event: any) {
-  //   this.getSearchedGifs(event);
-  // }
-
-  // Assuming to invoke getSingleUser(1), the result 
-  // will be stored in the cache system with key 'user1'
-  // @LiquidCache('gifData{event}')
+  /* This function gets called on any change in pagination index*/
   public async pageChange(event: any) {
     console.log(event);   
 
@@ -139,14 +86,9 @@ export class HomePageComponent implements OnInit {
       case ContentType.SEARCH: this.getSearchedGifs(null, event); break;
       case ContentType.SUBCATEGORY: this.getSubcategoriesGifs(this.currentCategory, event); break;
     }
-    
-    //javascript, jQuery
-
-    // var xhr = $.get(`http://api.giphy.com/v1/gifs/search?q=ryan+gosling&api_key=${this.gf}&limit=24`);
-
-    // xhr.done(function(data) { console.log("success got data", data); });
   }
 
+  /* Used to fetch trending gifs from giphy repository */
   public async getTrendingGifs(page: number) {
     this.isSpinning = true;
     const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
@@ -173,11 +115,12 @@ export class HomePageComponent implements OnInit {
     this.message.remove(id);
   }
 
+  /* Used to fetch gifs for the searched ketword from giphy repository */
   public async getSearchedGifs(event: any, page: number) {
     this.isSpinning = true;
     const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
     if (event != null) { this.totalCount = 0; } // Without this, the pagination index isn't changing on UI from any value greater than default value, back to the default value again on this.gifData value change.
-    if (this.contentType == ContentType.SEARCH && this.tempSearchKeyword.trim().length > 0 && this.tempSearchKeyword.trim().toLowerCase() != this.searchKeyword.trim().toLowerCase() && this.cache.get('gifData' + page))
+    if (this.contentType == ContentType.SEARCH && this.tempSearchKeyword.trim().length > 0 && this.tempSearchKeyword.trim().toLowerCase() == this.searchKeyword.trim().toLowerCase() && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
       console.log('Cached Value:', cacheData);
@@ -186,7 +129,7 @@ export class HomePageComponent implements OnInit {
     else {
       try {
         this.tempSearchKeyword = this.searchKeyword;
-        let tempData = await (await this.gf.search(this.searchKeyword, { limit: 24, offset: (((page - 1) * 24) + 1), sort: 'relevant', type: 'stickers' })).data;
+        let tempData = await (await this.gf.search(this.searchKeyword, { limit: 24, offset: (((page - 1) * 24) + 1), sort: 'relevant', })).data;
         tempData.length > 0 ? this.gifData = tempData : null;
         console.log('Response: ', tempData);
         console.log('Searched Gifs: ', this.gifData);
@@ -201,6 +144,7 @@ export class HomePageComponent implements OnInit {
     this.message.remove(id);
   }
 
+  /* Used to fetch gifs under a certain category selected from side nav bar */
   public async getSubcategoriesGifs(category: string, page: number) {
     this.isSpinning = true;
     const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
@@ -230,6 +174,7 @@ export class HomePageComponent implements OnInit {
     this.message.remove(id);
   }
 
+  /* common operation to be performed on the response data received */
   private commonOperation(gifData: any, page: number) {
     if (gifData.length == 0)
     {

@@ -1,19 +1,8 @@
 <nz-layout [style.height]="'100%'" [style.overflow]="'hidden'">
-  <!-- <nz-header>
-    <div class="logo"></div>
-    <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
-      <li nz-menu-item nzSelected>nav 1</li>
-      <li nz-menu-item>nav 2</li>
-      <li nz-menu-item>nav 3</li>
-    </ul>
-  </nz-header> -->
   <nz-layout>
     <nz-sider nzCollapsible nzWidth="200px" nzTheme="light" (nzCollapsedChange)="onCollapsedChange($event)">
-      <!-- <div class="logo">
-        <h2>Categories</h2>
-      </div> -->
       <ul nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
-        <li nz-menu-item class="mainMenuItem">
+        <li nz-menu-item class="mainMenuItem" *ngIf="categories.length > 0">
           <i nz-icon nzType="appstore" [style.font-size]="'large'"></i>
           <span [style.font-size]="'20px'">Categories</span>
         </li>
@@ -23,78 +12,15 @@
             <span>{{item.key | titlecase}}</span>
           </li>
         </ng-container>
-        <!-- <li nz-menu-item>
-          <i nz-icon nzType="user"></i>
-          <span>GIPHY Studios</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="laptop"></i>
-          <span>Animals</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="notification"></i>
-          <span>Actions</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="file"></i>
-          <span>Anime</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="user"></i>
-          <span>Cartoons</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="laptop"></i>
-          <span>Emotions</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="notification"></i>
-          <span>Food/Drink</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="file"></i>
-          <span>Gaming</span>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="user"></i>
-          <span>Holidays/Greetings</span>
-        </li>
-        <li nz-submenu nzTitle="Memes" nzIcon="notification">
-          <ul>
-            <li nz-menu-item>
-              <i nz-icon nzType="laptop"></i>
-              <span>Arthur</span>
-            </li>
-            <li nz-menu-item>
-              <i nz-icon nzType="laptop"></i>
-              <span>Confused</span>
-            </li>
-            <li nz-menu-item>
-              <i nz-icon nzType="laptop"></i>
-              <span>Crying Dawson</span>
-            </li>
-          </ul>
-        </li>
-        <li nz-menu-item>
-          <i nz-icon nzType="notification"></i>
-          <span>Clips</span>
-        </li> -->
       </ul>
     </nz-sider>
     <nz-layout #innerLayout class="inner-layout" [style.margin-left]="'200px'" [style.padding]="'5px'">
       <div class="dflex" *ngIf="categories.length > 0">
-        <label [style.color]="'white'">Category being shown: </label> &nbsp;
-        <nz-tag nzColor="default">{{selectedCategory | titlecase}}</nz-tag>
+        <label class="custom-font-style2" [style.color]="'white'">Category being shown: </label> &nbsp;
+        <nz-tag nzColor="default" class="custom-font-style2">{{selectedCategory | titlecase}}</nz-tag>
       </div>
-      <!-- <nz-breadcrumb>
-        <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-        <nz-breadcrumb-item>List</nz-breadcrumb-item>
-        <nz-breadcrumb-item>App</nz-breadcrumb-item>
-      </nz-breadcrumb> -->
       <nz-content [style.background-color]="'#ffffff00 !important'">
         <router-outlet></router-outlet>
-        <!-- <button nz-button nzType="primary">Primary</button>
-        <a [routerLink]="['/home']">Click Me</a> -->
       </nz-content>
     </nz-layout>
   </nz-layout>
