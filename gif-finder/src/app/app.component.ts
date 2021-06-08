@@ -26,7 +26,6 @@ export class AppComponent {
     this.sampler.categorySubject.subscribe((response) => {
       let tempCategories = response.categories;
       this.getSubcategories = response?.subcategoriesFn;
-      console.log('From Subject: ', response);
       this.associateIcons(tempCategories);
     }, (error) => {
 

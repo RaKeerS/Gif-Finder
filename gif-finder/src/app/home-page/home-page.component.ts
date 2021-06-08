@@ -48,9 +48,8 @@ export class HomePageComponent implements OnInit {
     this.sampler.subcategorySubject.subscribe((response) => {
       this.currentCategory = response;
       this.getSubcategoriesGifs(response, 1);
-      console.log('Response from Home Component: ', response);
     }, (error) => {
-      console.log('Error from Home Component: ', error);
+      this.message.create('error', error);
     })
   }
 
@@ -62,10 +61,8 @@ export class HomePageComponent implements OnInit {
   public async init(): Promise<void> {
     try {
       const { data: categories } = await this.gf.categories();
-      console.log('CategoriesList', categories);
       let categoriesList: string[] = [];
       categories.forEach((category: any) => {
-        console.log(category) // ICategory
         categoriesList.push(category.name);
       });
 
@@ -79,8 +76,6 @@ export class HomePageComponent implements OnInit {
 
   /* This function gets called on any change in pagination index*/
   public async pageChange(event: any) {
-    console.log(event);   
-
     switch(this.contentType) {
       case ContentType.TREND: this.getTrendingGifs(event); break;
       case ContentType.SEARCH: this.getSearchedGifs(null, event); break;
@@ -95,18 +90,14 @@ export class HomePageComponent implements OnInit {
     if (this.contentType == ContentType.TREND && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
-      console.log('Cached Value:', cacheData);
       this.gifData = cacheData;
     } 
     else {
       try {
         let tempData = await (await this.gf.trending({ limit: 24, offset: (((page - 1) * 24) + 1) })).data;
         tempData.length > 0 ? this.gifData = tempData : null;
-        console.log('Response: ', tempData);
-        console.log('Trending Gifs: ', this.gifData);
         this.commonOperation(tempData, page);
       } catch (error) {
-        console.log('Error occurred: ' + error);
         this.message.create('error', error);
       }
     }
@@ -123,7 +114,6 @@ export class HomePageComponent implements OnInit {
     if (this.contentType == ContentType.SEARCH && this.tempSearchKeyword.trim().length > 0 && this.tempSearchKeyword.trim().toLowerCase() == this.searchKeyword.trim().toLowerCase() && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
-      console.log('Cached Value:', cacheData);
       this.gifData = cacheData;
     } 
     else {
@@ -131,11 +121,8 @@ export class HomePageComponent implements OnInit {
         this.tempSearchKeyword = this.searchKeyword;
         let tempData = await (await this.gf.search(this.searchKeyword, { limit: 24, offset: (((page - 1) * 24) + 1), sort: 'relevant', })).data;
         tempData.length > 0 ? this.gifData = tempData : null;
-        console.log('Response: ', tempData);
-        console.log('Searched Gifs: ', this.gifData);
         this.commonOperation(tempData, page);
       } catch (error) {
-        console.log('Error occurred: ' + error);
         this.message.create('error', error);
       }
     }    
@@ -151,7 +138,6 @@ export class HomePageComponent implements OnInit {
     if (this.contentType == ContentType.SUBCATEGORY && this.currentCategory == this.tempCategory && this.cache.get('gifData' + page))
     {
       let cacheData: object = this.cache.getCacheObject('gifData' + page).value;
-      console.log('Cached Value:', cacheData);
       this.gifData = cacheData;
     } 
     else {
@@ -162,10 +148,8 @@ export class HomePageComponent implements OnInit {
           tempData.push(value.gif);
         })
         tempData.length > 0 ? this.gifData = tempData : null;
-        console.log('Subcategory Gifs: ', this.gifData);
         this.commonOperation(tempData, page);
       } catch (error) {
-        console.log('Error occurred: ' + error);
         this.message.create('error', error);
       }
     }
@@ -180,7 +164,6 @@ export class HomePageComponent implements OnInit {
     {
       page - 1 != 0 ? this.totalCount = 10 * (page - 1) : null;
       this.isEmpty = true;
-      console.log('Sorry, no results found!');
       this.message.create('error', 'Sorry, no results found!');
     }
     else if(gifData.length < 24)
