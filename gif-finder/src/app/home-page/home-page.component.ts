@@ -154,6 +154,7 @@ export class HomePageComponent implements OnInit {
       }
     }
     this.contentType = ContentType.SUBCATEGORY;
+    this.tempCategory = category;
     this.isSpinning = false;
     this.message.remove(id);
   }
@@ -162,8 +163,13 @@ export class HomePageComponent implements OnInit {
   private commonOperation(gifData: any, page: number) {
     if (gifData.length == 0)
     {
-      page - 1 != 0 ? this.totalCount = 10 * (page - 1) : null;
-      this.isEmpty = true;
+      if (page - 1 != 0 ) { 
+        this.totalCount = 10 * (page - 1); 
+        this.cache.set('gifData' + page, gifData, this.specificConf);
+      } 
+      else {
+        this.isEmpty = true;
+      }
       this.message.create('error', 'Sorry, no results found!');
     }
     else if(gifData.length < 24)
