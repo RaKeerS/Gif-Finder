@@ -8,6 +8,8 @@ the category side bar is always upto date.
 At present, the application can only fetch <=120 gifs i.e. 24 gifs per page (or lesser than that), this is a sort of restriction at the moment, 
 as the API doesn't allow to mass fetch the gifs in one call.
 
+You can play with the application over here - "https://rakeers.github.io/Gif-Finder/" 😎💻👨🏻‍💻
+
 ## Technologies Used
 The entire application is created using [Angular 11](https://angular.io/) framework, 
 with a wrapper of [NG-Zorro](https://ng.ant.design/docs/introduce/en) which is an Angular UI component library.
