@@ -134,6 +134,7 @@ export class HomePageComponent implements OnInit {
   /* Used to fetch gifs under a certain category selected from side nav bar */
   public async getSubcategoriesGifs(category: string, page: number) {
     this.isSpinning = true;
+    if (page == 1 && this.currentCategory != this.tempCategory ) { this.initial = 1; this.cache.clear();  };
     const id = this.message.loading('In progress...', { nzDuration: 0 }).messageId;
     if (this.contentType == ContentType.SUBCATEGORY && this.currentCategory == this.tempCategory && this.cache.get('gifData' + page))
     {
@@ -161,6 +162,7 @@ export class HomePageComponent implements OnInit {
 
   /* common operation to be performed on the response data received */
   private commonOperation(gifData: any, page: number) {
+    this.totalCount = 0;
     if (gifData.length == 0)
     {
       if (page - 1 != 0 ) { 
